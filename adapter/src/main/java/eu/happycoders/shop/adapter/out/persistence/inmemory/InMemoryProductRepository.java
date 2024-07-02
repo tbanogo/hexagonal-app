@@ -4,6 +4,8 @@ import eu.happycoders.shop.adapter.out.persistence.DemoProducts;
 import eu.happycoders.shop.application.port.out.persistence.ProductRepository;
 import eu.happycoders.shop.model.product.Product;
 import eu.happycoders.shop.model.product.ProductId;
+import io.quarkus.arc.lookup.LookupIfProperty;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 import java.util.Locale;
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@LookupIfProperty(name = "persistence", stringValue = "inmemory", lookupIfMissing = true)
+@ApplicationScoped
 public class InMemoryProductRepository implements ProductRepository {
 
     private final Map<ProductId, Product> products = new ConcurrentHashMap<>();

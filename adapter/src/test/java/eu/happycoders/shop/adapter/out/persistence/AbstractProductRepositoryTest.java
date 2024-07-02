@@ -3,6 +3,8 @@ package eu.happycoders.shop.adapter.out.persistence;
 import eu.happycoders.shop.application.port.out.persistence.ProductRepository;
 import eu.happycoders.shop.model.product.Product;
 import eu.happycoders.shop.model.product.ProductId;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractProductRepositoryTest<T extends ProductRepository> {
 
-    private T productRepository;
+    @Inject
+    Instance<ProductRepository> productRepositoryInstance;
+    private ProductRepository productRepository;
 
     @BeforeEach
     void initRepository() {
-        productRepository = createProductRepository();
+        productRepository = productRepositoryInstance.get();
     }
-
-    protected abstract T createProductRepository();
 
     @Test
     void givenPersistedProductId_whenFindById_thenReturnsATestProduct() {

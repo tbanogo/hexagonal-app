@@ -7,6 +7,8 @@ import eu.happycoders.shop.model.cart.CartLineItem;
 import eu.happycoders.shop.model.cart.NotEnoughItemsInStockException;
 import eu.happycoders.shop.model.customer.CustomerId;
 import eu.happycoders.shop.model.product.Product;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,19 +27,20 @@ public abstract class AbstractCartRepositoryTest
 
     private static final AtomicInteger CUSTOMER_ID_SEQUENCE_GENERATOR = new AtomicInteger();
 
-    private T cartRepository;
+    @Inject Instance<ProductRepository> productRepositoryInstance;
 
-    protected abstract T createCartRepository();
-    protected abstract U createProductRepository();
+    @Inject Instance<CartRepository> cartRepositoryInstance;
+
+    private CartRepository cartRepository;
 
     @BeforeEach
     void initRepository() {
-        this.cartRepository = createCartRepository();
+        this.cartRepository = cartRepositoryInstance.get();
         this.persitTestProducts();
     }
 
     private void persitTestProducts() {
-        U productRepository = createProductRepository();
+        ProductRepository productRepository = productRepositoryInstance.get();
         productRepository.save(TEST_PRODUCT_1);
         productRepository.save(TEST_PRODUCT_2);
     }
